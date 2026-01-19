@@ -1,0 +1,4 @@
+# 忽略 node_modules 文件夹及内部所有内容
+node_modules/
+.env
+.DS_Store

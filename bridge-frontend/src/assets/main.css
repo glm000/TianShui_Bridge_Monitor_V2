@@ -1,0 +1,105 @@
+/* src/assets/main.css */
+/* 强制覆盖所有默认边距 */
+#app {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw;
+  height: 100vh;
+  display: block; /* 防止 flex 布局影响 */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  /* background-color: #050a15; 补上这一层底色，双重保险 */
+}
+
+/* Element Plus 下拉菜单浅色主题 */
+.el-select-dropdown,
+.el-picker-panel,
+.el-popper,
+.el-cascader__dropdown {
+  background: #ffffff !important;
+  border: 1px solid #e4e7ed !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.el-select-dropdown__item {
+  color: #606266 !important;
+  background: transparent !important;
+}
+
+.el-select-dropdown__item:hover {
+  background: #f5f7fa !important;
+  color: #409eff !important;
+}
+
+.el-select-dropdown__item:focus {
+  background: #f5f7fa !important;
+  color: #409eff !important;
+}
+
+.el-select-dropdown__item.is-selected {
+  background: #ecf5ff !important;
+  color: #409eff !important;
+  font-weight: 600;
+}
+
+/* 级联选择器面板 */
+.el-cascader-panel,
+.el-cascader-menu {
+  background: #ffffff !important;
+  color: #606266 !important;
+}
+
+.el-cascader-node {
+  color: #606266 !important;
+}
+
+.el-cascader-node:hover,
+.el-cascader-node:focus {
+  background: #f5f7fa !important;
+}
+
+.el-cascader-node.is-active {
+  color: #409eff !important;
+  font-weight: 600;
+}
+
+.el-cascader-node.in-active-path {
+  color: #409eff !important;
+}
+
+/* 日期选择器面板 */
+.el-picker-panel {
+  background: #ffffff !important;
+  border-color: #e4e7ed !important;
+}
+
+.el-picker-panel__body {
+  background: transparent;
+}
+
+.el-date-table td {
+  color: #606266;
+}
+
+.el-date-table td.available:hover {
+  color: #409eff;
+}
+
+.el-date-table td.current:not(.disabled) {
+  color: #409eff;
+  font-weight: 600;
+}
+
+.el-date-range-picker__header,
+.el-picker-panel__icon-btn {
+  color: #606266 !important;
+}
+
+.el-date-range-picker__header:hover,
+.el-picker-panel__icon-btn:hover {
+  color: #409eff !important;
+}
