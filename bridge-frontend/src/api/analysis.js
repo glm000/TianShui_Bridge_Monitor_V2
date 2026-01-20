@@ -6,7 +6,7 @@ import { get, baseUrl } from '../request.js'
  * @param {Object} params - { bridgeId, sectionId, sensorCode, startTime, endTime, page, pageSize }
  */
 export const getHistoryData = (params) => {
-  return get('/api/analysis/history', params)
+  return get('/analysis/history', params)
 }
 
 /**
@@ -14,7 +14,7 @@ export const getHistoryData = (params) => {
  * @param {Object} params - { sensorCode, startTime, endTime }
  */
 export const getStatistics = (params) => {
-  return get('/api/analysis/statistics', params)
+  return get('/analysis/statistics', params)
 }
 
 /**
@@ -22,7 +22,7 @@ export const getStatistics = (params) => {
  * @param {Object} params - { sensorCode, startTime, endTime, granularity }
  */
 export const getTrendData = (params) => {
-  return get('/api/analysis/trend', params)
+  return get('/analysis/trend', params)
 }
 
 /**
@@ -30,7 +30,7 @@ export const getTrendData = (params) => {
  * @param {Object} params - { sensorCode, startTime, endTime, bins }
  */
 export const getDistribution = (params) => {
-  return get('/api/analysis/distribution', params)
+  return get('/analysis/distribution', params)
 }
 
 /**
@@ -38,7 +38,7 @@ export const getDistribution = (params) => {
  * @param {Object} params - { sensorCodes, startTime, endTime, granularity }
  */
 export const getCompareData = (params) => {
-  return get('/api/analysis/compare', params)
+  return get('/analysis/compare', params)
 }
 
 /**
@@ -46,7 +46,7 @@ export const getCompareData = (params) => {
  * @param {Object} params - { bridgeId, sensorCode, startTime, endTime, isHandled, page, pageSize }
  */
 export const getAlarmHistory = (params) => {
-  return get('/api/analysis/alarms', params)
+  return get('/analysis/alarms', params)
 }
 
 /**
@@ -54,7 +54,7 @@ export const getAlarmHistory = (params) => {
  * @param {Object} params - { startTime, endTime }
  */
 export const getAlarmStats = (params) => {
-  return get('/api/analysis/alarm-stats', params)
+  return get('/analysis/alarm-stats', params)
 }
 
 /**
@@ -65,5 +65,5 @@ export const exportData = (params) => {
   // 构建查询字符串
   const queryString = new URLSearchParams(params).toString()
   // 返回完整URL供前端触发下载
-  return `${baseUrl}/api/analysis/export?${queryString}`
+  return `${baseUrl}/analysis/export?${queryString}`
 }

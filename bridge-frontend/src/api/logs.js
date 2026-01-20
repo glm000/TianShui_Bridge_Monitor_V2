@@ -2,30 +2,30 @@ import { get, del, post } from '../request.js'
 
 // 获取日志列表
 export const getLogList = (params) => {
-  return get('/api/user/logs', params)
+  return get('/user/logs', params)
 }
 
 // 获取操作类型列表
 export const getActionTypes = () => {
-  return get('/api/user/logs/action-types')
+  return get('/user/logs/action-types')
 }
 
 // 获取用户名列表
 export const getLogUsers = () => {
-  return get('/api/user/logs/users')
+  return get('/user/logs/users')
 }
 
 // 获取日志统计
 export const getLogStatistics = () => {
-  return get('/api/user/logs/statistics')
+  return get('/user/logs/statistics')
 }
 
 // 删除单条日志
 export const deleteLog = (id) => {
-  return del(`/api/user/logs/${id}`)
+  return del(`/user/logs/${id}`)
 }
 
 // 批量删除日志
 export const batchDeleteLogs = (ids) => {
-  return post('/api/user/logs/batch-delete', { ids })
+  return post('/user/logs/batch-delete', { ids })
 }

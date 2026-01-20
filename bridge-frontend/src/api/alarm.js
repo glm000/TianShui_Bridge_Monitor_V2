@@ -14,7 +14,7 @@ import { get, post, put, del } from '../request'
  * @param {string} params.keyword - 搜索关键词
  */
 export const getAlarmList = (params) => {
-  return get('/api/alarm/list', params)
+  return get('/alarm/list', params)
 }
 
 /**
@@ -22,7 +22,7 @@ export const getAlarmList = (params) => {
  * @param {number} id - 告警ID
  */
 export const getAlarmById = (id) => {
-  return get(`/api/alarm/${id}`)
+  return get(`/alarm/${id}`)
 }
 
 /**
@@ -33,7 +33,7 @@ export const getAlarmById = (id) => {
  * @param {string} data.remark - 备注
  */
 export const updateAlarmStatus = (id, data) => {
-  return put(`/api/alarm/${id}/status`, data)
+  return put(`/alarm/${id}/status`, data)
 }
 
 /**
@@ -43,7 +43,7 @@ export const updateAlarmStatus = (id, data) => {
  * @param {number} data.status - 新状态 (0/1/2)
  */
 export const batchUpdateStatus = (data) => {
-  return put('/api/alarm/batch/status', data)
+  return put('/alarm/batch/status', data)
 }
 
 /**
@@ -51,7 +51,7 @@ export const batchUpdateStatus = (data) => {
  * @param {number} id - 告警ID
  */
 export const deleteAlarm = (id) => {
-  return del(`/api/alarm/${id}`)
+  return del(`/alarm/${id}`)
 }
 
 /**
@@ -59,7 +59,7 @@ export const deleteAlarm = (id) => {
  * @param {Array<number>} ids - 告警ID数组
  */
 export const batchDeleteAlarms = (ids) => {
-  return del('/api/alarm/batch/delete', { ids })
+  return del('/alarm/batch/delete', { ids })
 }
 
 /**
@@ -70,5 +70,5 @@ export const batchDeleteAlarms = (ids) => {
  * @param {number} params.bridgeId - 桥梁ID
  */
 export const getAlarmStatistics = (params) => {
-  return get('/api/alarm/statistics/overview', params)
+  return get('/alarm/statistics/overview', params)
 }

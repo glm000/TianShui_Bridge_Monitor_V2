@@ -7,7 +7,7 @@ import { get } from '../request.js'
  * @returns {Promise<Blob>}
  */
 export const exportAlarms = (params) => {
-  return get('/api/export/alarms', params, { responseType: 'blob' })
+  return get('/export/alarms', params, { responseType: 'blob' })
 }
 
 /**
@@ -16,7 +16,7 @@ export const exportAlarms = (params) => {
  * @returns {Promise<Blob>}
  */
 export const exportSensorData = (params) => {
-  return get('/api/export/sensor-data', params, { responseType: 'blob' })
+  return get('/export/sensor-data', params, { responseType: 'blob' })
 }
 
 /**
@@ -25,5 +25,5 @@ export const exportSensorData = (params) => {
  * @returns {Promise<Blob>}
  */
 export const exportLogs = (params) => {
-  return get('/api/export/logs', params, { responseType: 'blob' })
+  return get('/export/logs', params, { responseType: 'blob' })
 }

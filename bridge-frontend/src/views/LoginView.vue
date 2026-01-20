@@ -23,7 +23,7 @@ const handleLogin = async () => {
   loading.value = true
 
   try {
-    const res = await post('/api/user/login', {
+    const res = await post('/user/login', {
       username: form.username,
       password: form.password
     })
