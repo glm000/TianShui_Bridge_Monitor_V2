@@ -57,4 +57,24 @@ const router = createRouter({
   ]
 })
 
+
+// ==========================================
+// 【新增】全局路由守卫
+// ==========================================
+router.beforeEach((to, from, next) => {
+  // 1. 获取登录状态 (根据 LoginView.vue 里的逻辑)
+  const isAuthenticated = localStorage.getItem('userInfo')
+
+  // 2. 判断拦截逻辑
+  if (to.name !== 'login' && !isAuthenticated) {
+    // 情况A: 如果去的不是“登录页”，且“没有登录信息”
+    // -> 强制跳转回登录页
+    next({ name: 'login' })
+  } else {
+    // 情况B: 其他情况（去登录页，或者已经登录了）
+    // -> 直接放行
+    next()
+  }
+})
+
 export default router
