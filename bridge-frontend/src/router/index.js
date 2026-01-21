@@ -3,7 +3,7 @@ import LoginView from '../views/LoginView.vue'
 import AppLayout from '../layout/AppLayout.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory('/bridge/'),
   routes: [
     {
       path: '/',
@@ -59,20 +59,21 @@ const router = createRouter({
 
 
 // ==========================================
-// 【新增】全局路由守卫
+// 🔒 核心修复：全局路由守卫
 // ==========================================
 router.beforeEach((to, from, next) => {
-  // 1. 获取登录状态 (根据 LoginView.vue 里的逻辑)
-  const isAuthenticated = localStorage.getItem('userInfo')
+  // 1. 读取登录标记 (注意：这里必须和 LoginView.vue 里存储的 key 一致)
+  // 如果您想做更严格的校验，可以检查 userInfo 是否为 null 或 "undefined"
+  const userInfo = sessionStorage.getItem('userInfo')
+  const isAuthenticated = userInfo && userInfo !== 'undefined'
 
-  // 2. 判断拦截逻辑
+  // 2. 拦截逻辑
   if (to.name !== 'login' && !isAuthenticated) {
-    // 情况A: 如果去的不是“登录页”，且“没有登录信息”
-    // -> 强制跳转回登录页
+    // 如果要去非登录页，且没登录 -> 强制踢回登录页
+    console.warn('未登录，强制跳转至登录页')
     next({ name: 'login' })
   } else {
-    // 情况B: 其他情况（去登录页，或者已经登录了）
-    // -> 直接放行
+    // 其他情况（去登录页，或者已登录） -> 放行
     next()
   }
 })

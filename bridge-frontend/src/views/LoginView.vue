@@ -29,8 +29,8 @@ const handleLogin = async () => {
     })
 
     if (res.data.success) {
-      // 保存用户信息到 localStorage
-      localStorage.setItem('userInfo', JSON.stringify(res.data.user))
+      // 保存用户信息到 sessionStorage
+      sessionStorage.setItem('userInfo', JSON.stringify(res.data.user))
       
       ElMessage.success('欢迎回来！登录成功')
       setTimeout(() => {

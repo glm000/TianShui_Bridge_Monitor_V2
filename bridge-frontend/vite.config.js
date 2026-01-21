@@ -6,6 +6,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/bridge/',  // <--- 【关键修改】必须和你的部署路径一致
   plugins: [
     vue(),
     // vueDevTools(), // 暂时禁用
