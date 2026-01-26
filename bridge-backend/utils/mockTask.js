@@ -14,16 +14,16 @@ const startMockTask = () => {
         let val = 0
         const limitMax = parseFloat(sensor.limit_max)
         const limitMin = parseFloat(sensor.limit_min)
-        
+
         // 如果有上下限，基于阈值范围生成数据
         if (limitMax !== null && limitMin !== null && !isNaN(limitMax) && !isNaN(limitMin)) {
           const range = limitMax - limitMin
           const center = (limitMax + limitMin) / 2
-          
+
           // 90%的数据在正常范围内（中心点±30%范围波动）
           // 10%的数据可能接近或超过阈值（用于测试告警）
           const rand = Math.random()
-          
+
           if (rand < 0.9) {
             // 正常数据：在中心点±30%范围内波动
             const fluctuation = range * 0.3
@@ -51,11 +51,11 @@ const startMockTask = () => {
         } else if (limitMin !== null && !isNaN(limitMin)) {
           // 只有下限：在下限附近生成数据
           const rand = Math.random()
-          if (rand < 0.9) {
-            // 90%数据在安全范围（下限到下限200%）
+          if (rand < 0.95) {
+            // 95%数据在安全范围（下限到下限200%）
             val = limitMin + Math.abs(limitMin) * Math.random()
           } else {
-            // 10%数据接近或超下限
+            // 5%数据接近或超下限
             val = limitMin * (0.8 + Math.random() * 0.3)
           }
         } else {
@@ -88,7 +88,7 @@ const startMockTask = () => {
     } catch (err) {
       console.error('Mock Data Error:', err.message)
     }
-  }, 10000) // 10秒一次
+  }, 30000) // 30秒一次
 }
 
 module.exports = startMockTask

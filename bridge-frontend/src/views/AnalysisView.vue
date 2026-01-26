@@ -150,75 +150,39 @@
       <div class="table-section panel-box">
         <div class="panel-header">
           <span class="panel-title">明细列表</span>
-          <el-button 
-            type="danger" 
-            size="small" 
-            :disabled="selectedDataIds.length === 0" 
-            @click="handleBatchDelete"
-          >
-            批量删除 ({{ selectedDataIds.length }})
-          </el-button>
+          <el-button type="danger" size="small" :disabled="selectedDataIds.length === 0" @click="handleBatchDelete">批量删除 ({{ selectedDataIds.length }})</el-button>
         </div>
 
         <div class="table-wrapper" ref="tableBodyEl">
-          <el-table
-  :data="historyData"
-  height="100%"
-  style="width: 100%"
-  v-loading="tableLoading"
-  size="small"
-  stripe
-  @selection-change="handleSelectionChange"
->
-  <el-table-column type="selection" width="40" align="center" header-align="center" />
-  
-  <el-table-column
-    prop="created_at"
-    label="时间"
-    min-width="120"
-    align="center"
-    header-align="center"
-    show-overflow-tooltip
-  />
+          <el-table :data="historyData" height="100%" style="width: 100%" v-loading="tableLoading" size="small" stripe @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="40" align="center" header-align="center" />
 
-  <el-table-column prop="value" label="数值" width="90" align="center" header-align="center">
-    <template #default="{ row }">
-      <span :class="{ 'text-danger': isExceeded(row), 'font-mono': true }">
-        {{ Number(row.value).toFixed(2) }}
-      </span>
-    </template>
-  </el-table-column>
+            <el-table-column prop="created_at" label="时间" min-width="120" align="center" header-align="center" show-overflow-tooltip />
 
-  <el-table-column label="状态" width="70" align="center" header-align="center">
-    <template #default="{ row }">
-      <div class="status-dot" :class="isExceeded(row) ? 'error' : 'success'"></div>
-    </template>
-  </el-table-column>
-  
-  <el-table-column label="操作" width="70" align="center" header-align="center" fixed="right">
-    <template #default="{ row }">
-      <el-button link type="danger" size="small" @click="handleDelete(row)">删除</el-button>
-    </template>
-  </el-table-column>
-</el-table>
+            <el-table-column prop="value" label="数值" width="90" align="center" header-align="center">
+              <template #default="{ row }">
+                <span :class="{ 'text-danger': isExceeded(row), 'font-mono': true }">
+                  {{ Number(row.value).toFixed(2) }}
+                </span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="状态" width="70" align="center" header-align="center">
+              <template #default="{ row }">
+                <div class="status-dot" :class="isExceeded(row) ? 'error' : 'success'"></div>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作" width="70" align="center" header-align="center" fixed="right">
+              <template #default="{ row }">
+                <el-button link type="danger" size="small" @click="handleDelete(row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
 
         <div class="pagination-footer">
-          <el-pagination 
-            v-if="pagination.total > 0" 
-            :current-page="pagination.page" 
-            :page-size="pagination.pageSize" 
-            :page-sizes="[20, 50, 100]" 
-            :total="pagination.total" 
-            :pager-count="5"
-            small 
-            background 
-            layout="total, sizes, prev, pager, next"
-            @update:current-page="val => (pagination.page = val)" 
-            @update:page-size="val => (pagination.pageSize = val)" 
-            @size-change="handleTableQuery" 
-            @current-change="handleTableQuery" 
-          />
+          <el-pagination v-if="pagination.total > 0" :current-page="pagination.page" :page-size="pagination.pageSize" :page-sizes="[20, 50, 100]" :total="pagination.total" :pager-count="5" small background layout="total, sizes, prev, pager, next" @update:current-page="val => (pagination.page = val)" @update:page-size="val => (pagination.pageSize = val)" @size-change="handleTableQuery" @current-change="handleTableQuery" />
         </div>
       </div>
     </div>
@@ -456,7 +420,7 @@ const updateChartInternal = async () => {
   try {
     // 确保 DOM 存在
     await nextTick()
-    
+
     // 初始化图表实例
     if (!chartInstance && chartEl.value) {
       chartInstance = echarts.init(chartEl.value)
@@ -487,7 +451,7 @@ const updateChartInternal = async () => {
       chartEmpty.value = Object.keys(data).length === 0
       renderCompareChart(data)
     }
-    
+
     // 关键修复：数据渲染后立即调用 resize，确保布局正确
     await nextTick()
     chartInstance?.resize()
@@ -568,22 +532,29 @@ const isExceeded = row => {
 
 const handleExport = () => {
   const url = exportData({ ...filterForm, startTime: dateRange.value[0], endTime: dateRange.value[1] })
-  window.open(url, '_blank')
+
+  // 创建一个隐藏的链接并点击
+  const link = document.createElement('a')
+  link.href = url
+  link.style.display = 'none' // 隐藏元素
+  // link.target = '_blank' // 注意：不要加这一行，否则还是会闪烁
+
+  document.body.appendChild(link)
+  link.click()
+
+  // 清理 DOM
+  document.body.removeChild(link)
 }
 
 // 删除单条数据
-const handleDelete = async (row) => {
+const handleDelete = async row => {
   try {
-    await ElMessageBox.confirm(
-      `确定要删除这条传感器数据吗？`,
-      '删除确认',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
-    
+    await ElMessageBox.confirm(`确定要删除这条传感器数据吗？`, '删除确认', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+
     const res = await del(`/api/data/sensor-data/${row.id}`)
     if (res.data.success) {
       ElMessage.success('删除成功！')
@@ -600,23 +571,19 @@ const handleDelete = async (row) => {
 }
 
 // 选择变化
-const handleSelectionChange = (selection) => {
+const handleSelectionChange = selection => {
   selectedDataIds.value = selection.map(item => item.id)
 }
 
 // 批量删除
 const handleBatchDelete = async () => {
   try {
-    await ElMessageBox.confirm(
-      `确定要删除选中的 ${selectedDataIds.value.length} 条传感器数据吗？此操作不可恢复。`,
-      '批量删除确认',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
-    
+    await ElMessageBox.confirm(`确定要删除选中的 ${selectedDataIds.value.length} 条传感器数据吗？此操作不可恢复。`, '批量删除确认', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+
     const res = await post('/api/data/sensor-data/batch-delete', { ids: selectedDataIds.value })
     if (res.data.success) {
       ElMessage.success(`成功删除 ${selectedDataIds.value.length} 条数据！`)
@@ -700,7 +667,7 @@ onUnmounted(() => {
 }
 .filter-card.sticky {
   position: sticky;
-  top: 12px;            /* 根据你外层布局微调 */
+  top: 12px; /* 根据你外层布局微调 */
   z-index: 30;
 }
 .filter-card :deep(.el-card__body) {
@@ -775,7 +742,7 @@ onUnmounted(() => {
   font-size: 20px;
   font-weight: 800;
   color: #111827;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
 }
 .stat-info .unit {
   font-size: 12px;
@@ -783,33 +750,69 @@ onUnmounted(() => {
 }
 
 /* 颜色风格：保留你原来的逻辑 */
-.stat-card.blue { border-left-color: #409eff; }
-.stat-card.blue .stat-icon { background: #ecf5ff; color: #409eff; }
+.stat-card.blue {
+  border-left-color: #409eff;
+}
+.stat-card.blue .stat-icon {
+  background: #ecf5ff;
+  color: #409eff;
+}
 
-.stat-card.green { border-left-color: #67c23a; }
-.stat-card.green .stat-icon { background: #f0f9eb; color: #67c23a; }
+.stat-card.green {
+  border-left-color: #67c23a;
+}
+.stat-card.green .stat-icon {
+  background: #f0f9eb;
+  color: #67c23a;
+}
 
-.stat-card.orange { border-left-color: #e6a23c; }
-.stat-card.orange .stat-icon { background: #fdf6ec; color: #e6a23c; }
+.stat-card.orange {
+  border-left-color: #e6a23c;
+}
+.stat-card.orange .stat-icon {
+  background: #fdf6ec;
+  color: #e6a23c;
+}
 
-.stat-card.teal { border-left-color: #20b2aa; }
-.stat-card.teal .stat-icon { background: rgba(32, 178, 170, 0.10); color: #20b2aa; }
+.stat-card.teal {
+  border-left-color: #20b2aa;
+}
+.stat-card.teal .stat-icon {
+  background: rgba(32, 178, 170, 0.1);
+  color: #20b2aa;
+}
 
-.stat-card.red { border-left-color: #909399; }
-.stat-card.red .stat-icon { background: #f4f4f5; color: #909399; }
+.stat-card.red {
+  border-left-color: #909399;
+}
+.stat-card.red .stat-icon {
+  background: #f4f4f5;
+  color: #909399;
+}
 
 .stat-card.has-alarm {
   border-left-color: #f56c6c;
   box-shadow: 0 0 0 0 rgba(245, 108, 108, 0.22);
   animation: shadowPulse 2s infinite;
 }
-.stat-card.has-alarm .stat-icon { background: #fef0f0; color: #f56c6c; }
-.stat-card.has-alarm .value { color: #f56c6c; }
+.stat-card.has-alarm .stat-icon {
+  background: #fef0f0;
+  color: #f56c6c;
+}
+.stat-card.has-alarm .value {
+  color: #f56c6c;
+}
 
 @keyframes shadowPulse {
-  0% { box-shadow: 0 0 0 0 rgba(245, 108, 108, 0.24); }
-  70% { box-shadow: 0 0 0 8px rgba(245, 108, 108, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(245, 108, 108, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 108, 108, 0.24);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(245, 108, 108, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 108, 108, 0);
+  }
 }
 
 /* 5) 主内容：更稳的 Grid（右侧给最小宽度），并加响应式 */
@@ -892,14 +895,14 @@ onUnmounted(() => {
   flex-direction: column;
 }
 /* 分页栏：不要居中挤压，改为左右分布，并允许换行 */
-.table-section .pagination-footer{
-  padding: 10px 12px;          /* 给左侧 sizes 留空间 */
-  justify-content: flex-start;  /* 不要居中 */
-  overflow: visible;            /* 防止被裁剪 */
+.table-section .pagination-footer {
+  padding: 10px 12px; /* 给左侧 sizes 留空间 */
+  justify-content: flex-start; /* 不要居中 */
+  overflow: visible; /* 防止被裁剪 */
 }
 /* 让分页 sizes 更窄 */
 .table-section .pagination-footer :deep(.el-pagination__sizes .el-select) {
-  width: 85px !important;     /* 你想更窄就继续调小：80/72 */
+  width: 85px !important; /* 你想更窄就继续调小：80/72 */
   min-width: 0 !important;
 }
 /* 选择框本体也一起收窄 */
@@ -912,7 +915,6 @@ onUnmounted(() => {
   margin-right: 4px;
 }
 
-
 /* 状态与数值 */
 .status-dot {
   width: 7px;
@@ -920,10 +922,19 @@ onUnmounted(() => {
   border-radius: 50%;
   display: inline-block;
 }
-.status-dot.success { background: #67c23a; }
-.status-dot.error { background: #f56c6c; }
-.font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
-.text-danger { color: #f56c6c; font-weight: 700; }
+.status-dot.success {
+  background: #67c23a;
+}
+.status-dot.error {
+  background: #f56c6c;
+}
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+}
+.text-danger {
+  color: #f56c6c;
+  font-weight: 700;
+}
 
 /* 空状态 */
 .empty-guide {
