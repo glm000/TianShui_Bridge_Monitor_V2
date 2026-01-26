@@ -6,7 +6,7 @@ import { get } from '../request.js'
  * @param {Object} params 查询参数
  * @returns {Promise<Blob>}
  */
-export const exportAlarms = (params) => {
+export const exportAlarms = params => {
   return get('/export/alarms', params, { responseType: 'blob' })
 }
 
@@ -15,7 +15,7 @@ export const exportAlarms = (params) => {
  * @param {Object} params 查询参数
  * @returns {Promise<Blob>}
  */
-export const exportSensorData = (params) => {
+export const exportSensorData = params => {
   return get('/export/sensor-data', params, { responseType: 'blob' })
 }
 
@@ -24,6 +24,6 @@ export const exportSensorData = (params) => {
  * @param {Object} params 查询参数
  * @returns {Promise<Blob>}
  */
-export const exportLogs = (params) => {
+export const exportLogs = params => {
   return get('/export/logs', params, { responseType: 'blob' })
 }

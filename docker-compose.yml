@@ -1,0 +1,56 @@
+services:
+  # --- 数据库服务 (根据你的指令修改) ---
+  mysql-monitor:
+    image: mysql:8.0
+    container_name: mysql-monitor
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+      # 【注意】YAML中不需要反斜杠，但必须用单引号包裹特殊字符
+      - MYSQL_ROOT_PASSWORD=Egova@2024!Tsh
+      - MYSQL_DATABASE=bridge_monitor
+    ports:
+      - "3306:3306"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # 将当前目录下的 sql 文件挂载进去
+      - ./init_clean.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - bridge-net
+
+  # --- 后端服务 (保持不变) ---
+  bridge-backend-app:
+    image: bridge-backend:v1
+    container_name: bridge-backend-app
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+      - DB_HOST=mysql-monitor
+      - DB_USER=root
+      # 后端连接用的密码必须和数据库实际密码一致
+      - DB_PASSWORD=Egova@2024!Tsh
+      - DB_DATABASE=bridge_monitor
+    ports:
+      - "3000:3000"
+    networks:
+      - bridge-net
+    depends_on:
+      - mysql-monitor
+
+  # --- 前端服务 (保持不变) ---
+  bridge-web:
+    image: bridge-web:v1
+    container_name: bridge-web
+    restart: always
+    ports:
+      - "8081:80"
+    networks:
+      - bridge-net
+    depends_on:
+      - bridge-backend-app
+
+  # --- 网络定义 ---
+# 正确！networks 必须顶格写，没有空格
+networks:
+  bridge-net:
+    external: true

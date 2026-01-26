@@ -29,10 +29,28 @@ const handleLogin = async () => {
     })
 
     if (res.data.success) {
-      // 保存用户信息到 sessionStorage
-      sessionStorage.setItem('userInfo', JSON.stringify(res.data.user))
-      
+      // ============================================================
+      // 🟢 双重保存修复：既存 Local 也存 Session，满足所有检查
+      // ============================================================
+
+      const token = res.data.token || (res.data.user && res.data.user.token)
+      const userInfo = JSON.stringify(res.data.user)
+
+      if (token) {
+        // 1. 给 request.js 用 (我们刚改的)
+        localStorage.setItem('token', token)
+        // 2. 给可能的旧代码用 (双保险)
+        sessionStorage.setItem('token', token)
+      }
+
+      // 3. 保存用户信息 (双份保存，防止路由守卫查不到)
+      localStorage.setItem('userInfo', userInfo)
+      sessionStorage.setItem('userInfo', userInfo)
+
+      // ============================================================
+
       ElMessage.success('欢迎回来！登录成功')
+
       setTimeout(() => {
         router.push('/dashboard')
       }, 500)
@@ -40,18 +58,15 @@ const handleLogin = async () => {
       ElMessage.error(res.data.message || '账号或密码错误')
     }
   } catch (error) {
-    // 区分不同类型的错误
     if (error.response) {
-      // 服务器返回了错误响应（如 401、500 等）
       const message = error.response.data?.message || '账号或密码错误'
       ElMessage.error(message)
     } else if (error.request) {
-      // 请求已发送但没有收到响应（网络错误）
       ElMessage.error('无法连接到服务器，请检查网络连接')
     } else {
-      // 其他错误
       ElMessage.error('登录失败，请稍后重试')
     }
+    console.error('登录错误详情:', error)
   } finally {
     loading.value = false
   }
